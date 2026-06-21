@@ -1,0 +1,45 @@
+# grsnc: GRSN-Counting
+_target_: src.models.grsn_counting2.GRSNCounting
+
+attr_feat_size: 3
+#structure_feat_size: 30
+structure_feat_size: len(${data.walk_length})*${data.num_sample}
+structure_hidden_size: 16
+pos_weight: 5
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.0001
+  weight_decay: 0.00001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 10
+
+str_dropout: 0.2
+
+graph_conv:
+  _target_: src.models.components.graph_conv.MyGraphConv
+#  _target_: src.models.components.graph_attn.MyGraphAttn
+#  input_size: ${data.num_sample}+4
+  input_size: ${model.attr_feat_size}+${model.structure_hidden_size}
+  hidden_size: 32
+  output_size: 32
+  dropout: 0
+
+#graph_decoder:
+#  _target_: src.models.components.graph_decoder.GraphDecoder
+
+graph_classifier:
+  _target_: src.models.components.graph_classifier.GraphClassifier
+  input_size: ${model.graph_conv.output_size}
+  output_size: 1
+  dropout: 0.2
+
+
+# compile model for faster training with pytorch 2.0
+compile: false

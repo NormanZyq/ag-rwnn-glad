@@ -1,0 +1,61 @@
+_target_: src.models.baseline.gsn.gsn2.GSN
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.0001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 10
+
+model:
+  _target_: src.models.baseline.gsn.GNNSubstructures.GNNSubstructures
+  in_features: 64
+  out_features: 128
+  d_in_id: [1]
+  in_edge_features: None
+  d_in_node_encoder: [4]
+  d_in_edge_encoder: None
+  d_out_edge_encoder: [None]
+  d_out_id_embedding: [None]
+  d_out_degree_embedding: [None]
+  encoder_degrees: None
+  d_degree: None
+  model_name: GSN
+  readout: mean
+  dropout_features: 0
+  bn: False
+  final_projection: True
+  inject_ids: False
+  inject_edge_features: False
+  random_features: False
+  id_scope: local
+  d_msg: None
+  d_out: [64]
+  d_h: 600
+  aggr: None
+  flow: None
+  msg_kind: gin
+  train_eps: False
+  activation_mlp: relu
+  bn_mlp: True
+  jk_mlp: False
+  degree_embedding:
+  degree_as_tag: [False]
+  retain_features: [False]
+  multi_embedding_aggr:
+  d_out_node_encoder: 2
+  edge_encoder: None
+  id_embedding: one_hot_encoder
+  extend_dims: True
+  activation: relu
+  seed: 12345
+
+
+# compile model for faster training with pytorch 2.0
+compile: false

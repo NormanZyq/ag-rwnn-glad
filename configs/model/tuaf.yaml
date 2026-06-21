@@ -1,0 +1,23 @@
+_target_: src.models.baseline.tuaf.tuaf.TUAF
+
+model:
+  _target_: src.models.baseline.tuaf.outlier_model.OutlierModel
+  feat_dim: 79
+  hidden_dim: 512
+  out_dim: 256
+  dropout_prob: 0.3
+
+optimizer:
+  _target_: torch.optim.SGD
+  _partial_: true
+  lr: 1e-5
+  weight_decay: 5e-6
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.StepLR
+  _partial_: true
+  step_size: 30
+  gamma: 0.3
+
+# compile model for faster training with pytorch 2.0
+compile: false

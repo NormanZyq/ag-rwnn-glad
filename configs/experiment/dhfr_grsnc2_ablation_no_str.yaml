@@ -1,0 +1,48 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: gdrcm
+  - override /model: grsnc2
+#  - override /callbacks: default
+  - override /trainer: default
+#  - override /experiment: sage
+
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+#trainer:
+#  max_epochs: 350
+
+tags: ['sage', 'grsnc2', 'dhfr', 'ablation', 'no_structure_feat']
+
+data:
+  name: 'DHFR'
+  walk_length: [20,30,15,25,40,35]
+  num_sample: 10
+  batch_size: 32  # default: 32
+  down_sample_rate: 0.2
+  dsl: 0
+  sampling_method: 'node2vec'
+  p: 2
+  q: 0.6
+
+model:
+  optimizer:
+    lr: 0.001
+#    weight_decay: 0.0005
+  attr_feat_size: 56
+  structure_hidden_size: 0 # default: 16
+  pos_weight: 0.8
+  str_dropout: 0.3
+  graph_conv:
+    _target_: src.models.components.graph_sage.MyGraphSage
+    hidden_size: 32
+    output_size: 32
+    aggregator_type: 'pool'
+    dropout: 0.1
+  graph_classifier:
+    dropout: 0

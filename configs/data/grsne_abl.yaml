@@ -1,0 +1,106 @@
+# This is an AI-gen yaml. Check the correction:
+# [x] Checked by author
+
+# Ablation experiments configuration
+# 消融实验配置文件 - 通过修改参数进行不同的消融实验
+
+_target_: src.data.components.ablation_datamodule.AblationDataModule
+name: AIDS
+
+# ============= 核心消融实验参数 =============
+# 消融实验模式 - 这是最重要的参数！
+# - 'feature_only': 使用传统游走(node2vec/random)但保持14维特征构建 (测试游走策略的影响)
+# - 'sequence_only': 直接使用游走序列作为特征，不做特征工程 (测试特征构建的影响)
+ablation_mode: feature_only  # 切换到 'sequence_only' 进行第二种消融实验
+
+# 游走方法选择
+# - 'node2vec': 使用Node2Vec游走（可通过p,q参数控制）
+# - 'random_walk': 使用简单随机游走
+walk_method: node2vec  # 可切换到 'random_walk'
+
+# ============= 数据集参数 =============
+# 下采样标签（通常0表示正常，1表示异常）
+dsl: 0
+# 下采样率 - 控制少数类的采样比例
+down_sample_rate: 0.1
+re_gen_ds_labels: False
+
+# ============= 游走参数 =============
+# 每个节点的游走次数
+num_walks_per_node: 2  # 原始方法中的num_sample对应参数
+
+# 游走长度 - 注意这里是单个值，不是列表
+walk_length: 10  # 可以调整为其他值如 8, 12, 15等
+
+# ============= Node2Vec 特定参数 =============
+# 只在 walk_method='node2vec' 时有效
+# p: 控制返回上一个节点的概率 (p<1偏向BFS, p>1偏向DFS)
+# q: 控制探索新节点的概率 (q<1偏向DFS, q>1偏向BFS)
+p: 2.0  # 可尝试 0.5 (更多返回) 或 2.0 (更少返回)
+q: 0.6  # 可尝试 0.5 (深度优先) 或 2.0 (广度优先)
+
+# ============= Sequence-Only 模式特定参数 =============
+# 只在 ablation_mode='sequence_only' 时有效
+# 序列编码的维度
+#sequence_dim: 64  # 可尝试 32, 128, 256等
+# 节点词汇表大小
+#max_vocab_size: 5000  # 可根据图的规模调整
+
+# ============= 训练参数 =============
+data_dir: ${paths.data_dir}
+batch_size: 32
+train_val_test_split: [0.7, 0.2, 0.1]
+num_workers: 0
+pin_memory: False
+shuffle: true
+seed: 12345
+
+# ============= 实验配置示例 =============
+# 以下是不同消融实验的参数配置示例（注释形式）：
+
+# --- 实验1A: Feature-Only + Node2Vec ---
+# ablation_mode: feature_only
+# walk_method: node2vec
+# p: 1.0
+# q: 0.5
+# num_walks_per_node: 2
+# walk_length: 10
+
+# --- 实验1B: Feature-Only + Random Walk ---
+# ablation_mode: feature_only
+# walk_method: random_walk
+# num_walks_per_node: 2
+# walk_length: 10
+
+# --- 实验2A: Sequence-Only + Node2Vec ---
+# ablation_mode: sequence_only
+# walk_method: node2vec
+# p: 1.0
+# q: 0.5
+# num_walks_per_node: 5  # 序列模式可能需要更多游走
+# walk_length: 10
+# sequence_dim: 128
+# max_vocab_size: 5000
+
+# --- 实验2B: Sequence-Only + Random Walk ---
+# ablation_mode: sequence_only
+# walk_method: random_walk
+# num_walks_per_node: 5
+# walk_length: 10
+# sequence_dim: 128
+# max_vocab_size: 5000
+
+# ============= 对比原始方法 =============
+# 原始异常感知方法的配置（供参考）：
+# _target_: src.data.gdrcm_datamodule.EnhancedGDRCMDataModule
+# sampling_method: anomaly_aware
+# num_sample: 3
+# walk_length: [5, 6, 8]
+# bias_strength: 2.0
+
+# ============= 使用说明 =============
+# 1. 直接修改上面的参数进行不同实验
+# 2. 或者在命令行中覆盖参数：
+#    python train.py datamodule=ablation_experiments datamodule.ablation_mode=sequence_only
+#    python train.py datamodule=ablation_experiments datamodule.walk_method=random_walk
+# 3. 建议为每个实验保存不同的日志和结果，便于对比分析

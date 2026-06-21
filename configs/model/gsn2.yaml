@@ -1,0 +1,24 @@
+_target_: src.models.baseline.gsn.gsn2.GSN
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.00001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 10
+
+
+input_size: 4
+hidden_size1: 64
+hidden_size2: 32
+output_size: 1
+
+
+# compile model for faster training with pytorch 2.0
+compile: false

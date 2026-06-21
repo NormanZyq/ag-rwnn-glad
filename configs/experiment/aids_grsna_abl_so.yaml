@@ -1,0 +1,51 @@
+# @package _global_
+# abl_fo: Ablation study - Feature Only
+# The other type is sequence only (abl_so)
+
+# Note: 每个变体的完整的实验包含node2vec和random walk两种 2x2=4（每个数据集4个关于数据增强的消融）
+
+defaults:
+  - override /data: grsne_abl
+  - override /model: grsnc2_anomaly
+#  - override /callbacks: default
+  - override /trainer: gpu
+#  - override /experiment: sage
+
+
+#trainer:
+#  max_epochs: 350
+
+tags: ['gcn', 'grsna', 'aids', 'ablation', 'sequence-only']
+
+data:
+#  基本参数
+  name: 'AIDS'
+  batch_size: 32  # default: 32
+  dsl: 0    # for p53 data, do not change
+  down_sample_rate: 0.1   # default: any number >= 1
+#  walk_length: [20,15,7,5,9,11]
+  # 消融相关参数
+  ablation_mode: sequence_only
+  walk_length: 10
+  num_walks_per_node: 5
+  walk_method: 'node2vec'
+  p: 2
+  q: 0.6
+
+model:
+  optimizer:
+    lr: 0.001
+#    weight_decay: 0.0005
+  attr_feat_size: 42
+  structure_feat_size: (${data.walk_length}+1)*${data.num_walks_per_node}
+  structure_hidden_size: 32 # default: 16
+  pos_weight: 0.1
+  str_dropout: 0.2
+  graph_conv:
+    _target_: src.models.components.graph_conv.MyGraphConv
+    hidden_size: 32
+    output_size: 32
+#    aggregator_type: 'pool'
+    dropout: 0.3
+  graph_classifier:
+    dropout: 0.3

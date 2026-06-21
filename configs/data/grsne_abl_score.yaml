@@ -1,0 +1,18 @@
+_target_: src.data.gdrcm_datamodule_single_score.EnhancedGDRCMDataModuleAblSingleScore
+name: AIDS
+# dsl: down_sampling_label
+dsl: 0
+down_sample_rate: 0.1
+re_gen_ds_labels: True
+num_sample: 10
+walk_length: [10]
+sampling_method: anomaly_aware
+mode: 'combined'
+use_score: 'r'
+bias_strength: 2.0
+data_dir: ${paths.data_dir}
+batch_size: 32
+train_val_test_split: [0.7, 0.2, 0.1]
+num_workers: 0
+pin_memory: False
+shuffle: true

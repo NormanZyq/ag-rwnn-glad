@@ -1,0 +1,37 @@
+# @package _global_
+
+defaults:
+  - override /data: grsne
+  - override /model: grsnc2_anomaly
+#  - override /callbacks: default
+  - override /trainer: gpu
+#  - override /experiment: sage
+
+
+tags: ['gcn', 'grsn-anomaly', 'hse']
+
+data:
+  name: 'Tox21_HSE_training'
+  mode: 'combined'
+  walk_length: [10]
+  num_sample: 10
+  batch_size: 64
+  down_sample_rate: 1.1
+  dsl: 1
+  sampling_method: 'anomaly_aware'
+
+model:
+  optimizer:
+    lr: 0.0005
+    weight_decay: 0.000
+  attr_feat_size: 54
+  structure_feat_size: 14*${data.num_sample}+${data.num_sample}*${data.walk_length}[0]
+  structure_hidden_size: 28
+  str_dropout: 0.3
+  graph_conv:
+    _target_: src.models.components.graph_conv.MyGraphConv
+    hidden_size: 32
+    output_size: 32
+    dropout: 0.3
+  graph_classifier:
+    dropout: 0.2

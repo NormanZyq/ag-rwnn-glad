@@ -1,0 +1,49 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: gdrcm
+  - override /model: grsnc2
+#  - override /callbacks: default
+  - override /trainer: default
+#  - override /experiment: sage
+
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+#trainer:
+#  max_epochs: 350
+
+tags: ['sage', 'grsnc2', 'aids', 'ablation', 'no_structure_feature']
+
+data:
+  name: 'AIDS'
+  walk_length: [20,15,7,5,9,11]
+  num_sample: 5
+  batch_size: 32  # default: 32
+  down_sample_rate: 0.1   # default: any number >= 1
+  dsl: 0    # for p53 data, do not change
+  sampling_method: 'node2vec'
+  p: 2
+  q: 0.6
+  random_str_feat: False
+
+model:
+  optimizer:
+    lr: 0.001
+#    weight_decay: 0.0005
+  attr_feat_size: 42
+  structure_hidden_size: 0 # default: 16
+  pos_weight: 0.1
+  str_dropout: 0.2
+  graph_conv:
+    _target_: src.models.components.graph_sage.MyGraphSage
+    hidden_size: 32
+    output_size: 32
+    aggregator_type: 'pool'
+    dropout: 0.3
+  graph_classifier:
+    dropout: 0.3

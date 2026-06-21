@@ -1,0 +1,19 @@
+# gdrcm: GDR-Counting-Multi 指定数量随机游走，即walk_length是个数组
+_target_: src.data.gdrcm_datamodule.GDRCMDataModule
+name: AIDS
+# dsl: down_sampling_label
+dsl: 0
+down_sample_rate: 0.1
+re_gen_ds_labels: True
+num_sample: 3
+walk_length: [5, 6, 8]
+sampling_method: anomaly_aware    # p and q are not necessary if random (walk)
+bias_strength: 2.0
+p: 1
+q: 1
+data_dir: ${paths.data_dir}
+batch_size: 32
+train_val_test_split: [0.7, 0.2, 0.1]
+num_workers: 0
+pin_memory: False
+shuffle: true

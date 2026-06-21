@@ -1,0 +1,13 @@
+_target_: src.data.gdr_datamodule.GDRDataModule
+name: AIDS
+# dsl: down_sampling_label
+dsl: 0
+down_sample_rate: 0.1
+re_gen_ds_labels: true
+default_feat_dim: -1
+data_dir: ${paths.data_dir}
+batch_size: 32
+train_val_test_split: [0.7, 0.2, 0.1]
+num_workers: 0
+pin_memory: False
+shuffle: true
