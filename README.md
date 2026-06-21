@@ -1,3 +1,5 @@
+> **Commit metadata notice:** The commit history was recreated because the email address in the previous commit metadata was incorrect. Although the new commit date is after the deadline, no code, data, or experimental content was changed during this metadata-only correction. This does not affect any results, conclusions, or reproducibility of the paper.
+
 # AG-RWNN: Anomaly-Guided Random Walks for Structural Feature Augmentation in GNN-based Graph-Level Anomaly Detection
 
 Official code of paper _AG-RWNN: Anomaly-Guided Random Walks for Structural Feature Augmentation in GNN-based Graph-Level Anomaly Detection_
